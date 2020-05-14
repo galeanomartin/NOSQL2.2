@@ -1,0 +1,38 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+
+    container_name: 'back-flask'
+
+    command: sh -c 'python app.py'
+
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend:/backend
+
+    depends_on:
+      - "db-redis-flask"
+    
+  db-redis-flask:
+
+    container_name: 'db-redis-flask'
+    image: redis
+    ports:
+      - "6379:6379"
+
+  frontend:
+    build: ./frontend
+    container_name: 'front-react'
+    command: sh -c 'npm install; npm start'
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - "backend"
+    stdin_open: true
+    tty: true
+    
+    
